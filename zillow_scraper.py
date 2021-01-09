@@ -11,19 +11,24 @@ headers = {
 
 DB_PATH = '/var/www/html/zillow_price_tracker/db.sqlite'
 
+inserted_date = str(date.today())
+
 def insert_date():
+    inserted_date = str(date.today())
+    print('inserted_date from insert_date(): ' + inserted_date)
     db = sqlite3.connect(DB_PATH)
     cursor = db.cursor()
-    cursor.execute("INSERT OR IGNORE INTO dates(date) VALUES('" + str(date.today()) + "')")
+    cursor.execute("INSERT OR IGNORE INTO dates(date) VALUES('" + inserted_date + "')")
     db.commit()
     db.close()
 
 def insert_prices(insert_map):
+    print('inserted_date from insert_prices(): ' + inserted_date)
     db = sqlite3.connect(DB_PATH)
     cursor = db.cursor()
 
     for key, value in insert_map.items():
-        cursor.execute("INSERT INTO prices(price, house_id, scraped_date) SELECT '" + value + "' AS price, houses.id, dates.date FROM houses, dates WHERE houses.id=" + str(key) + " AND dates.date='" + str(date.today()) + "'")
+        cursor.execute("INSERT INTO prices(price, house_id, scraped_date) SELECT '" + value + "' AS price, houses.id, dates.date FROM houses, dates WHERE houses.id=" + str(key) + " AND dates.date='" + inserted_date + "'")
 
     db.commit()
     db.close()
